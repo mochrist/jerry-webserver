@@ -1,7 +1,7 @@
 package de.mochrist;
 
+import de.mochrist.config.RoutingConfig;
 import de.mochrist.request.Request;
-import de.mochrist.request.parts.Header;
 import de.mochrist.servlet.HttpServlet;
 import de.mochrist.servlet.ServletRouter;
 
@@ -49,6 +49,7 @@ public class Server {
         InputStreamReader inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         ServletRouter servletRouter = new ServletRouter();
+        RoutingConfig.configureRoutes(servletRouter);
 
         // 1. Request lesen
         StringBuilder requestBuilder = new StringBuilder();
@@ -61,18 +62,9 @@ public class Server {
         RequestParser parser = new RequestParser();
         Request request = parser.parse(requestBuilder.toString());
 
-        // 3. Pfad analysieren
+        // 3. Pfad analysieren und passendes Servlet zurückgeben
         HttpServlet servlet = servletRouter.route(request);
         servlet.handle(request, outputStream);
-    }
-
-    private String getHeaderValue(Request request, String name) {
-        for (Header header : request.getHeaders()) {
-            if (header.getName().equalsIgnoreCase(name)) {
-                return header.getValue();
-            }
-        }
-        return "";
     }
 
     public void shutdown() {

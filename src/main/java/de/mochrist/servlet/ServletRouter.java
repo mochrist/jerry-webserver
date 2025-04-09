@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ServletRouter {
-    private Map<String, HttpServlet> exactRoutesMap = new HashMap<>();
-    private List<PrefixRoute> prefixRoutesList = new ArrayList<>();
+    private final Map<String, HttpServlet> exactRoutesMap = new HashMap<>();
+    private final List<PrefixRoute> prefixRoutesList = new ArrayList<>();
 
 
     public HttpServlet route(Request request) {

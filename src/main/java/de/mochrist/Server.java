@@ -1,8 +1,9 @@
 package de.mochrist;
 
 import de.mochrist.config.RoutingConfig;
+import de.mochrist.request.ProcessedRequest;
 import de.mochrist.request.Request;
-import de.mochrist.servlet.HttpServlet;
+import de.mochrist.servlet.RoutedServlet;
 import de.mochrist.servlet.ServletRouter;
 
 import java.io.BufferedReader;
@@ -63,8 +64,11 @@ public class Server {
         Request request = parser.parse(requestBuilder.toString());
 
         // 3. Pfad analysieren und passendes Servlet zurückgeben
-        HttpServlet servlet = servletRouter.route(request);
-        servlet.handle(request, outputStream);
+//        HttpServlet servlet = servletRouter.route(request);
+//        servlet.handle(request, outputStream);
+        RoutedServlet routed = servletRouter.route(request);
+        ProcessedRequest processedRequest = new ProcessedRequest(request, routed.getPathParams());
+        routed.getServlet().handle(processedRequest, outputStream);
     }
 
     public void shutdown() {

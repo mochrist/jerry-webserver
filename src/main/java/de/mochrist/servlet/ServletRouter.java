@@ -1,40 +1,31 @@
 package de.mochrist.servlet;
 
-import de.mochrist.PrefixRoute;
+import de.mochrist.RouteDefinition;
 import de.mochrist.request.Request;
+import de.mochrist.request.parts.HttpMethod;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ServletRouter {
-    private final Map<String, HttpServlet> exactRoutesMap = new HashMap<>();
-    private final List<PrefixRoute> prefixRoutesList = new ArrayList<>();
+    private final List<RouteDefinition> routes = new ArrayList<>();
 
+    public void register(String path, HttpMethod method, HttpServlet servlet) {
+        routes.add(new RouteDefinition(path, method, servlet));
+    }
 
-    public HttpServlet route(Request request) {
+    public RoutedServlet route(Request request) {
         String path = request.getRequestLine().getPath();
+        HttpMethod method = HttpMethod.valueOf(request.getRequestLine().getMethod());
 
-        if (exactRoutesMap.containsKey(path)) {
-            return exactRoutesMap.get(path);
-        }
-
-        for (PrefixRoute route : prefixRoutesList) {
-            if (path.startsWith(route.getPrefix())) {
-                return route.getServlet();
+        for (RouteDefinition route : routes) {
+            if (route.matches(path, method)) {
+                Map<String, String> params = route.extractParams(path);
+                return new RoutedServlet(route.getServlet(), params);
             }
         }
-        return new NotFoundServlet();
-    }
 
-    public void registerExact(String path, HttpServlet servlet) {
-        if(!exactRoutesMap.containsKey(path)) {
-            exactRoutesMap.put(path, servlet);
-        }
-    }
-
-    public void registerPrefix(String path, HttpServlet servlet) {
-        prefixRoutesList.add(new PrefixRoute(servlet, path));
+        return new RoutedServlet(new NotFoundServlet(), Map.of());
     }
 }

@@ -1,7 +1,9 @@
 package de.mochrist.servlet;
 
+import de.mochrist.request.ProcessedRequest;
 import de.mochrist.request.Request;
 import de.mochrist.request.parts.Header;
+import de.mochrist.response.HttpStatus;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,10 +11,14 @@ import java.io.OutputStream;
 public class UserAgentServlet implements HttpServlet {
 
     @Override
-    public void handle(Request request, OutputStream outputStream) throws IOException {
-        String userAgent = getUserAgentHeaderValue(request);
-        String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " +
-                userAgent.length() + "\r\n\r\n" + userAgent;
+    public void handle(ProcessedRequest request, OutputStream outputStream) throws IOException {
+        String userAgent = getUserAgentHeaderValue(request.getRequest());
+
+        String response = HttpStatus.OK +
+                "Content-Type: text/plain\r\n" +
+                "Content-Length: " + userAgent.length() + "\r\n\r\n" +
+                userAgent;
+
         outputStream.write(response.getBytes());
     }
 

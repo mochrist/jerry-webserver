@@ -22,7 +22,7 @@ public class Server {
     private final ExecutorService executor = Executors.newFixedThreadPool(10); // Max. 10 gleichzeitige Clients
 
     public void start(int port) throws IOException {
-        XmlParser.loadRoutes();
+        XmlParser.getRoutes();
         ServerSocket serverSocket = new ServerSocket(port);
         serverSocket.setReuseAddress(true);
         System.out.println("Server läuft auf Port " + port);

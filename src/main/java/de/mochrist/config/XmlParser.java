@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XmlParser {
-    public static List<Route> loadRoutes() {
+    public static List<Route> getRoutes() {
         List<Route> routes = new ArrayList<>();
 
         try {
-            File file = new File("src/main/java/de/mochrist/routing-config.xml");
+            File file = new File("src/main/java/de/mochrist/routing-config.xml")
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(file);

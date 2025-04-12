@@ -1,6 +1,7 @@
 package de.mochrist;
 
 import de.mochrist.config.RoutingConfig;
+import de.mochrist.config.XmlParser;
 import de.mochrist.request.ProcessedRequest;
 import de.mochrist.request.Request;
 import de.mochrist.servlet.RoutedServlet;
@@ -21,6 +22,7 @@ public class Server {
     private final ExecutorService executor = Executors.newFixedThreadPool(10); // Max. 10 gleichzeitige Clients
 
     public void start(int port) throws IOException {
+        XmlParser.loadRoutes();
         ServerSocket serverSocket = new ServerSocket(port);
         serverSocket.setReuseAddress(true);
         System.out.println("Server läuft auf Port " + port);

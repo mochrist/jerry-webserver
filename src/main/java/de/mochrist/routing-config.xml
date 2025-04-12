@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routes>
+    <route path="/" method="GET" servlet="de.mochrist.servlet.RootServlet"/>
+    <route path="/user-agent" method="GET" servlet="de.mochrist.servlet.UserAgentServlet"/>
+    <route path="/echo/:text" method="GET" servlet="de.mochrist.servlet.EchoServlet"/>
+</routes>
